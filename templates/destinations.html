@@ -1,0 +1,67 @@
+{% extends "style.html" %}
+{% block content %}
+{% include "header.html" %}
+
+
+<body>
+<div class="container">
+<div class="jumbotron">
+  <h1>{{city.name}}</h1>
+</div>
+
+<div class = 'flash'>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+
+        {% for message in messages %}
+        <div class="alert alert-success" role="alert">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
+
+<a href="{{url_for('newDestinations', city_id = city.id )}}">
+    <button class="btn btn-default" id="new-destination">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Create a New Destination
+    </button>
+</a>
+
+<div class="container-fluid">
+  <div class="row">
+    {% if destinations !=[] %}
+    {% for destination in destinations %}
+    <div class="col-sm-3 col-md-4 col-lg-5" >
+        <img class="img-responsive" src="{{destination.image}}" alt="{{destination.name}}">
+        <h2>{{destination.name}}</h2>
+    
+
+        <h3>{{destination.description}}</h3>
+    
+
+        <p>{{destination.price}}</p>
+        
+        <p><a href='{{url_for('editDestinations', city_id = city.id, destination_id=destination.id ) }}' >Edit</a></p>
+
+        <p><a href='{{url_for('deleteDestinations', city_id = city.id, destination_id=destination.id ) }}' >Delete</a></p>
+        
+    </div>
+    {% endfor %}
+    {% else %}
+        <div class="col-sm-3 col-md-4 col-lg-5" >
+            <p> You currently have no destinations. <p>
+        </p>
+    {% endif %}
+  </div>
+</div>
+
+
+    </div>
+</body>
+
+
+{% endblock %}
+
+
+
+
+

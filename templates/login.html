@@ -1,0 +1,137 @@
+{% extends "style.html" %}
+{% block content %}
+<html>
+<head>
+    <!-- PRE-REQUISITES FOR GOOGLE SIGN IN -->
+    <!-- anonymouse function that inserts a script into the dom of the login.html page-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+    </script>
+
+    <script src="https://apis.google.com/js/platform.js" async defer> </script>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 col-md-12 col-xs-12"> 
+            <!-- GOOGLE PLUS SIGN IN-->
+<div id="signinButton">
+    <span class="g-signin"
+        data-scope="openid email"
+        data-clientid="497258657-0gnimuhnk9ssinml82g8i1pevk272190.apps.googleusercontent.com"
+        data-redirecturi="postmessage"
+        data-accesstype="offline"
+        data-cookiepolicy="single_host_origin"
+        data-callback="signInCallback"
+        data-approvalprompt="force">      
+    </span>
+    <!-- data-scope="openid" = requesting openid resource -->
+    <!-- data-redirecturi="postmessage" = enables one time use code flow-->
+    <!-- data-accesstype="offline" server can make requests to google api server even if the user is not logged in -->
+    <!-- data-cookiepolicy="single_host_origin" = determines the scope of the uris that can access the cookie -->
+    <!-- signle host origin means there is a single host name and no sub domains -->
+    <!-- data-callback="signInCallback" = call back method is called and given one time use code and access token -->
+    <!-- data-approvalprompt="force" user must login each time they visit login page and does check if they are already logged in -->
+</div>   
+        </div>
+        <div class="col-lg-6 col-md-12 col-xs-12"> 
+        <fb:login-button scope = "public_profile,email" onlogin="sendTokenToServer();">
+<a href='javascript:sendTokenToServer()'> Login with Facebook</a>
+</fb:login-button>   
+        </div>
+    </div>
+</div>
+
+
+<div id="result"></div>
+
+<script>
+    function signInCallback(authResult){
+        if(authResult['code']){
+            // Hide signin button
+            $('#signinButton').attr('style','display: none')
+
+            $.ajax({
+                type: 'POST',
+                url: '/gconnect?state={{STATE}}',
+                processData: false,
+                contentType: 'application/octet-stream; charset=utf-8',
+                data: authResult['code'],
+                success: function(result){
+                    if(result){
+                        $('#result').html('Login Successful!</br>'+result+'</br>Redirecting...')
+                        setTimeout(function(){
+                            window.location.href = '/city';
+                        },2000);
+                    }
+                    else if(authResult['error']){
+                        console.log('There was an error: ' + authResult['error']);
+                    }
+                    else{
+                        $('#result').html('Failed to make a server-side call. Check configuration and console.');
+                    }
+
+                    
+                    }
+            });
+
+        }
+    }
+</script>
+
+<!-- FACEBOOK -->
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '1674991139415006',
+      cookie     : true, 
+      xfbml      : true,
+      version    : 'v2.4'
+    });
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+
+    function sendTokenToServer() {
+        var access_token = FB.getAuthResponse()['accessToken'];
+        console.log(access_token)
+        console.log('Welcome!  Fetching your information.... ');
+        FB.api('/me', function(response) {
+            console.log('Successful login for: ' + response.name);
+            $.ajax({
+                type: 'POST',
+                url: '/fbconnect?state={{STATE}}',
+                processData: false,
+                data: access_token,
+                contentType: 'application/octet-stream; charset=utf-8',
+                success: function(result) {
+                    if (result) {
+                        $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
+                        setTimeout(function() {
+                        window.location.href = "/city";
+                        }, 4000);
+          
+                    } 
+                    else {
+                        $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+                    }
+                }
+           });
+        });
+    }
+</script>
+
+
+
+
+</body>
+
+</html>
+{% endblock %}

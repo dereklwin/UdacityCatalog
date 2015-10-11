@@ -1,0 +1,54 @@
+{% extends "style.html" %}
+{% block content %}
+{% include "header.html" %}
+
+<head>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+<div class="container">
+<div class="jumbotron">
+  <h1>Cities</h1>
+</div>
+
+<div class = 'flash'>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+
+        {% for message in messages %}
+        <div class="alert alert-success" role="alert">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+</div>
+
+<div class="container">
+<a href="{{url_for('newCity')}}">
+    <button class="btn btn-default" id="new-city">
+    	<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Create a New City
+    </button>
+</a>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+  	{% for city in cities %}
+    <div class="col-sm-3 col-md-4 col-lg-5" >
+        <a href = "{{url_for('showDestinations', city_id = city.id)}}">
+        	<img class="img-responsive" src="{{city.image}}" alt="{{city.name}}">
+        	<h2>{{city.name}}</h2>
+        </a>
+        <p><a href = "{{url_for('editCity',city_id = city.id)}}">Edit City</a></p>
+		<p> <a href = "{{url_for('deleteCity',city_id = city.id)}}">Delete City</a> </p>
+
+    </div>
+    {% endfor %}
+  </div>
+</div>
+    </div>
+</body>
+
+
+{% endblock %}

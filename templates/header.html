@@ -1,0 +1,12 @@
+<nav class="navbar navbar-default navbar-static-top">
+
+	<div class="container-fluid navbar-color">
+		<p class="navbar-text navbar-left"><a href="{{url_for('showCities')}}" class="navbar-link">Show All Cities</a></p>
+  		{%if 'username' not in session %}
+  		<p class="navbar-text navbar-right"><a href="{{url_for('showLogin')}}" class="navbar-link">Click Here to Login</a></p>
+		{% else %}
+		<p class="navbar-text navbar-right"><a href="{{url_for('disconnect')}}" class="navbar-link">Logout</a></p>
+		{% endif %}
+    	
+  </div>
+</nav>

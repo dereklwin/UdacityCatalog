@@ -1,0 +1,41 @@
+{% extends "style.html" %}
+{% block content %}
+{% include "header.html" %}
+
+<body>
+<div class="container">
+<div class="jumbotron">
+  <h1>{{city.name}}</h1>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row">
+    {% if destinations !=[] %}
+    {% for destination in destinations %}
+    <div class="col-sm-3 col-md-4 col-lg-5" >
+        <img class="img-responsive" src="{{destination.image}}" alt="{{destination.name}}">
+        <h2>{{destination.name}}</h2>
+    
+
+        <h3>{{destination.description}}</h3>
+    
+
+        <p>{{destination.price}}</p>
+        
+    </div>
+    {% endfor %}
+    {% else %}
+        <div class="col-sm-3 col-md-4 col-lg-5" >
+            <p> You currently have no destinations. <p>
+        </p>
+    {% endif %}
+  </div>
+</div>
+
+
+    </div>
+</body>
+
+
+{% endblock %}

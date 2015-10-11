@@ -1,0 +1,31 @@
+{% extends "style.html" %}
+{% block content %}
+{% include "header.html" %}
+
+<head>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+<div class="container">
+<div class="jumbotron">
+  <h1>Cities</h1>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+  	{% for city in cities %}
+    <div class="col-sm-3 col-md-4 col-lg-5" >
+        <a href = "{{url_for('showDestinations', city_id = city.id)}}">
+        	<img class="img-responsive" src="{{city.image}}" alt="{{city.name}}">
+        	<h2>{{city.name}}</h2>
+        </a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+    </div>
+</body>
+
+
+{% endblock %}
