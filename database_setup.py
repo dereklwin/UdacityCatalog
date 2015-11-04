@@ -10,8 +10,8 @@ from sqlalchemy import create_engine
 
 Base = declarative_base()
 
-class User(Base):
-  __tablename__ = 'user'
+class Userdb(Base):
+  __tablename__ = 'userdb'
 
   id = Column(Integer, primary_key = True)
   name = Column(String(250), nullable = False)
@@ -24,8 +24,8 @@ class Cities(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
     image = Column(String(250))
-    user_id = Column(Integer, ForeignKey('user.id'))
-    user = relationship(User)
+    user_id = Column(Integer, ForeignKey('userdb.id'))
+    user = relationship(Userdb)
 
     @property
     def serialize(self):
@@ -47,8 +47,8 @@ class Destinations(Base):
     city_id = Column(Integer, ForeignKey('cities.id'))
     cities = relationship(Cities)
     image = Column(String(250))
-    user_id = Column(Integer, ForeignKey('user.id'))
-    user = relationship(User)
+    user_id = Column(Integer, ForeignKey('userdb.id'))
+    user = relationship(Userdb)
 
     @property
     def serialize(self):
