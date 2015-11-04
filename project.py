@@ -21,12 +21,12 @@ import json
 import requests
 
 # Declare client ID by getting the information from client secret's json file from google console
-CLIENT_ID =json.loads(open('client_secret.json', 'r').read())['web']['client_id']
+CLIENT_ID =json.loads(open(r'/var/www/UdacityCatalog/client_secret.json', 'r').read())['web']['client_id']
 
 app = Flask(__name__)
 
 # Create postgresql session and connect to database
-engine = create_engine('postgresql+psycopg2:///cities')
+engine = create_engine('postgresql+psycopg2://catalog:drowssap@localhost/cities')
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
@@ -52,7 +52,7 @@ def gconnect():
     code  = request.data
     try:
         # Create oauth flow object and add clients secret key
-        oauth_flow = flow_from_clientsecrets('client_secret.json', scope='')
+        oauth_flow = flow_from_clientsecrets('/var/www//UdacityCatalog/client_secret.json', scope='')
         # specify this is a one time auth code using postmessage
         oauth_flow.redirect_uri = 'postmessage'
         # Trade one time auth code into a credentials object
@@ -472,4 +472,4 @@ def createUser(login_session):
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
     app.debug = True
-    app.run(host='0.0.0.0', port=5000)
+    app.run()
